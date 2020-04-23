@@ -48,7 +48,7 @@ const usersService = {
     },
 
     async findById (request) {
-        const { id } = request.query;
+        const { id } = request.params;
         return await usersRepository.findById(id);
     },
 
@@ -56,7 +56,9 @@ const usersService = {
         const { id } = request.params;
         const usernameAuth = request.headers['myapp_username'];
         const userAuth = await usersRepository.findByUsername(usernameAuth);
-        if (id !== userAuth.id) return { error : "You dont have permission to update another user", status: 403 }
+
+        let dddd = `${id}, ${usernameAuth}, ${userAuth}, ${userAuth.id}, ${(id !== userAuth.id)}`;
+        if (id !== userAuth.id) return { error : "You dont have permission to update another user "+ dddd, status: 403 }
 
         const { name, email, username, password, roles } = request.body;
         const encrypt = password ? await bcrypt.hash(password, constantsConfig.bcryptSalt) : undefined;
@@ -72,7 +74,8 @@ const usersService = {
         const { id } = request.params;
         const usernameAuth = request.headers['myapp_username'];
         const userAuth = await usersRepository.findByUsername(usernameAuth);
-        if (id !== userAuth.id) return { error : "You dont have permission to delete another user", status: 403 }
+        let dddd = `${id}, ${usernameAuth}, ${userAuth}, ${userAuth.id}, ${(id !== userAuth.id)}`;
+        if (id !== userAuth.id) return { error : "You dont have permission to delete another user " + dddd, status: 403 }
 
         return await usersRepository.delete(id);
     }

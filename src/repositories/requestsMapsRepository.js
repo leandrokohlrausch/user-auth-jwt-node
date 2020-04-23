@@ -17,16 +17,17 @@ const requestsMapsRepository = {
     },
 
     async create (requestMap, roles) {
+        let requestMapId;
         return await connection.transaction(function(trx) {
-            return trx('requests_maps').insert(requestMap).then(function (id) {
-                roles.forEach( (role) => role.request_map_id = id[0] );
-                return trx('roles_requests_maps').insert(roles);
-            });
+            return trx('requests_maps')
+                .insert(requestMap)
+                .then(function (id) {
+                    requestMapId = id[0];
+                    roles.forEach( (role) => role.request_map_id = requestMapId );
+                    return trx('roles_requests_maps').insert(roles);
+                });
         }).then(function(id) {
-            const reqMap =  connection('requests_maps')
-                .where('id', id[0])
-                .select("*");
-            return reqMap;
+            return { id: requestMapId };
         }).catch(function(error) {
             return {error : error, status: 500}
         });

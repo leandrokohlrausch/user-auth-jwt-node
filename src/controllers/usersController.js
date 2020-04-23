@@ -33,7 +33,7 @@ const usersController = {
     async delete (request, response) {
         const ret = await usersService.delete(request);
         ret.error ? response.status(ret.status) : response.status(204);
-        return response.send();
+        return response.send(ret.error);
     }
 
 };

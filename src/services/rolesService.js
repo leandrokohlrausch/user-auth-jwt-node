@@ -12,7 +12,7 @@ const  rolesService = {
     },
 
     async findById (request) {
-        const { id } = request.query;
+        const { id } = request.params;
         return await rolesRepository.findById(id);
     },
 

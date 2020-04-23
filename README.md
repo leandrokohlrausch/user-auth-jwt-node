@@ -24,6 +24,7 @@ Technologies
 - Celebrate
 - SQLite
 - Jwt
+- Jest 
 
 Usage
 
@@ -34,5 +35,7 @@ Usage
     - npm knex seed:run
     - npm start
     
- PS: Sorry, i am a java developer i am newbie in node `:sweat_smile:`
- PS: The tests are unfinished
+    If you want run tests
+    - npm test
+    
+ PS: Sorry, i am a java developer i am newbie in node :sweat_smile:

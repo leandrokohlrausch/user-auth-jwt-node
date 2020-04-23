@@ -3,39 +3,39 @@ const connection = require('./connection');
 const usersRepository = {
 
     async create (user, roles) {
+        let userId;
         return await connection.transaction(function(trx) {
             return trx('users')
                 .insert(user)
                 .then(function (id) {
-                    roles.forEach( (role) => role.user_id = id[0] );
+                    userId = id[0];
+                    roles.forEach( (role) => role.user_id =  userId);
                     return trx('users_roles').insert(roles);
                 });
-        }).then(function(id) {
-            const userr =  connection('users')
-                .where('id', id[0])
-                .select("username", "email", "name", "id");
-            return userr;
-        }).catch(function(error) {
-            return {error : error, status: 500}
+        }).then( function (id) {
+            return { id: userId };
+        }).catch( function (error) {
+            return { error : error, status: 500 };
         });
     },
 
     async findById (id) {
-        const user = await connection('users').where('id', id).select("*");
-        return user;
+        return await connection('users')
+            .where('id', id)
+            .select("name", "username", "email", "id")
+            .first();
     },
 
     async findAll () {
-        const users = await connection('users').select("*");
-        return users;
+        return await connection('users')
+            .select("*");
     },
 
     async findByUsername (username) {
-        const user = await connection('users')
+        return await connection('users')
             .where('username', username)
             .select('*')
             .first();
-        return user;
     },
 
     async update (id, user, roles) {
@@ -50,10 +50,7 @@ const usersRepository = {
                     return trx('users').where('id', id).update(user);
                 });
         }).then(function (ret) {
-            const userr =  connection('users')
-                .where('id', id)
-                .select("username", "email", "name", "id");
-            return userr;
+            return ret;
         }).catch(function (error) {
             return {error : error, status: 500}
         });

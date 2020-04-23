@@ -8,31 +8,31 @@ const rolesRepository = {
     },
 
     async findAll () {
-        const roles = await connection('roles').select("*");
-        return roles;
+        return await connection('roles')
+            .select("*");
     },
 
     async findById (id) {
-        const role = await connection('roles').where('id', id).select("*");
-        return role;
+        return await connection('roles')
+            .where('id', id)
+            .select("*")
+            .first();
     },
 
     async findAllByUser (user) {
         if (!user) return  [];
-        const roles = await connection('roles')
+        return await connection('roles')
             .join('users_roles', 'role_id', '=', 'roles.id')
             .where('users_roles.user_id', user.id)
             .select('roles.*');
-        return roles;
     },
 
     async findAllByRequestMaps (requestMap) {
         if (!requestMap) return  [];
-        const roles = await connection('roles')
+        return await connection('roles')
             .join('roles_requests_maps', 'role_id', '=', 'roles.id')
             .where('roles_requests_maps.request_map_id', requestMap.id)
             .select('roles.*');
-        return roles;
     },
 
     async delete (id) {
