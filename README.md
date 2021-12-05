@@ -32,7 +32,7 @@ Usage
 - Inside app folder running this commands
     - npm install
     - npx knex migrate:latest
-    - npm knex seed:run
+    - npx knex seed:run
     - npm start
     
     If you want run tests
